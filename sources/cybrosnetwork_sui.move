@@ -1,6 +1,6 @@
 module cybrosnetwork::cybrosnetwork {
 
-    // use std::string::{Self, String};
+    use std::string::{Self, String};
     use sui::transfer;
     use sui::object::{Self, UID};
     use sui::tx_context::{Self, TxContext};
@@ -21,7 +21,7 @@ module cybrosnetwork::cybrosnetwork {
 
     // Events
     struct NewPrompt has copy, drop {
-        data: vector<u8>,
+        data: String,
     }
 
     fun init(ctx: &mut TxContext) {
@@ -39,7 +39,7 @@ module cybrosnetwork::cybrosnetwork {
     public entry fun broker(treasury: &mut Treasury, fee: &mut Coin<SUI>, prompt: vector<u8>, ctx: &mut TxContext) {
         let pay_coin: Coin<SUI> = coin::split(fee, treasury.fee, ctx);
         coin::put(&mut treasury.balance, pay_coin);
-        emit(NewPrompt{ data: prompt });
+        emit(NewPrompt{ data: string::utf8(prompt) });
     }
 
     // Admin Only
