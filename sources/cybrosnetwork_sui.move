@@ -21,6 +21,7 @@ module cybrosnetwork::cybrosnetwork {
 
     // Events
     struct NewPrompt has copy, drop {
+        sender: address,
         data: String,
     }
 
@@ -39,7 +40,7 @@ module cybrosnetwork::cybrosnetwork {
     public entry fun broker(treasury: &mut Treasury, fee: &mut Coin<SUI>, prompt: vector<u8>, ctx: &mut TxContext) {
         let pay_coin: Coin<SUI> = coin::split(fee, treasury.fee, ctx);
         coin::put(&mut treasury.balance, pay_coin);
-        emit(NewPrompt{ data: string::utf8(prompt) });
+        emit(NewPrompt{ sender: tx_context::sender(ctx), data: string::utf8(prompt) });
     }
 
     // Admin Only
