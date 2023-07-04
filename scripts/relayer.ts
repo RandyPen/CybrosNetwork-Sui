@@ -77,21 +77,21 @@ api.on("error", (e) => {
 await api.isReady.catch((e) => console.error(e));
 
 const promptSub = await provider.subscribeEvent({
-    filter: promptFilter,
-    onMessage(event: SuiEvent) {
-      // handle subscription notification message here
-      console.log(event["parsedJson"]["data"]);
-      const prompt = event["parsedJson"]["data"].toString().trim();
-      if (prompt.length === 0) {
-        console.info("Prompt is blank, skip")
-        return []
-      };
-      const input = {e2e: false, data: prompt};
-      const txPromise: SubmittableExtrinsic<"promise", ISubmittableResult> = api.tx.offchainComputing.createJob(jobPoolId, jobPolicyId, jobSpecVersion, false, JSON.stringify(input), null);
-      console.info(`Sending offchainComputing.createJob(poolId, policyId, implSpecVersion, input, softExpiresIn) in batch`);
-	    console.info(`Call hash: ${txPromise.toHex()}`);
-      const txHash = txPromise.signAndSend(subOperatorKeyPair, { nonce: -1 });
-	    console.info(`Transaction hash: ${txHash.toHex()}`);
-    },
+  filter: promptFilter,
+  onMessage: async (event: SuiEvent) =>{
+    // handle subscription notification message here
+    console.log(event["parsedJson"]["data"]);
+    const prompt = event["parsedJson"]["data"].toString().trim();
+    if (prompt.length === 0) {
+      console.info("Prompt is blank, skip")
+      return []
+    };
+    const input = {e2e: false, data: prompt};
+    const txPromise = api.tx.offchainComputing.createJob(jobPoolId, jobPolicyId, jobSpecVersion, false, JSON.stringify(input), null);
+    console.info(`Sending offchainComputing.createJob(poolId, policyId, implSpecVersion, input, softExpiresIn) in batch`);
+    console.info(`Call hash: ${txPromise.toHex()}`);
+    const txHash = await txPromise.signAndSend(subOperatorKeyPair, { nonce: -1 });
+    console.info(`Transaction hash: ${txHash.toHex()}`);
+  },
 });
 
