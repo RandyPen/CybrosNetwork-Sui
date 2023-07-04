@@ -87,11 +87,11 @@ const promptSub = await provider.subscribeEvent({
         return []
       };
       const input = {e2e: false, data: prompt};
-      const txPromise: SubmittableExtrinsic<"promise", ISubmittableResult> = [api.tx.offchainComputing.createJob(jobPoolId, jobPolicyId, jobSpecVersion, false, JSON.stringify(input), null)];
+      const txPromise: SubmittableExtrinsic<"promise", ISubmittableResult> = api.tx.offchainComputing.createJob(jobPoolId, jobPolicyId, jobSpecVersion, false, JSON.stringify(input), null);
       console.info(`Sending offchainComputing.createJob(poolId, policyId, implSpecVersion, input, softExpiresIn) in batch`);
-	  console.info(`Call hash: ${txPromise.toHex()}`);
+	    console.info(`Call hash: ${txPromise.toHex()}`);
       const txHash = txPromise.signAndSend(subOperatorKeyPair, { nonce: -1 });
-	  console.info(`Transaction hash: ${txHash.toHex()}`);
+	    console.info(`Transaction hash: ${txHash.toHex()}`);
     },
 });
 
