@@ -2,8 +2,8 @@ import { JsonRpcProvider, Connection, SuiEvent } from 'npm:@mysten/sui.js';
 
 // Construct your connection:
 const connection = new Connection({
-	fullnode: 'wss://fullnode.testnet.sui.io',
-	faucet: 'wss://faucet.testnet.sui.io/gas',
+	websocket: 'wss://fullnode.testnet.sui.io',
+	faucet: 'https://faucet.testnet.sui.io/gas',
 });
 // connect to Testnet
 const provider = new JsonRpcProvider(connection);
