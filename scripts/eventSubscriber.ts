@@ -1,5 +1,3 @@
-// import { JsonRpcProvider, testnetConnection, SuiEvent } from 'npm:@mysten/sui.js';
-
 import { JsonRpcProvider, Connection, SuiEvent } from 'npm:@mysten/sui.js';
 
 // Construct your connection:
