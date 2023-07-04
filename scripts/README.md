@@ -40,3 +40,42 @@ export const PaginatedEvents = object({
 export type PaginatedEvents = Infer<typeof PaginatedEvents>;
 
 ```
+
+Event查询接口
+
+```typescript
+	/**
+	 * Get events for a given query criteria
+	 */
+	async queryEvents(
+		input: {
+			/** the event query criteria. */
+			query: SuiEventFilter;
+		} & PaginationArguments<PaginatedEvents['nextCursor']> &
+			OrderArguments,
+	): Promise<PaginatedEvents> {
+		return await this.client.requestWithType(
+			'suix_queryEvents',
+			[input.query, input.cursor, input.limit, (input.order || 'descending') === 'descending'],
+			PaginatedEvents,
+		);
+	}
+
+	/**
+	 * Subscribe to get notifications whenever an event matching the filter occurs
+	 */
+	async subscribeEvent(input: {
+		/** filter describing the subset of events to follow */
+		filter: SuiEventFilter;
+		/** function to run when we receive a notification of a new event matching the filter */
+		onMessage: (event: SuiEvent) => void;
+	}): Promise<Unsubscribe> {
+		return this.wsClient.request({
+			method: 'suix_subscribeEvent',
+			unsubscribe: 'suix_unsubscribeEvent',
+			params: [input.filter],
+			onMessage: input.onMessage,
+		});
+	}
+
+```
